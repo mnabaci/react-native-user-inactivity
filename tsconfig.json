@@ -9,18 +9,16 @@
     "sourceMap": false,
     "experimentalDecorators": true,
     "jsx": "react-native",
-    "lib": ["es2017"],
+    "lib": ["ES6", "DOM"],
+    "types": ["react"],
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "noEmitHelpers": true,
     "importHelpers": true,
     "strict": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "skipLibCheck": true
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

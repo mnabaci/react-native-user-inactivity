@@ -1,8 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Keyboard,
   PanResponder,
@@ -14,7 +10,7 @@ import {
   defaultTimeoutHandler,
   TimeoutHandler,
   useTimeout,
-} from 'usetimeout-react-hook';
+} from './usetimeout';
 
 const defaultTimeForInactivity = 10000;
 const defaultStyle: ViewStyle = {
@@ -87,7 +83,7 @@ const UserInactivity: React.FC<UserInactivityProps> = ({
    * If the user has provided a custom timeout handler, it is used directly,
    * otherwise it defaults to the default timeout handler (setTimeout/clearTimeout).
    */
-  const actualTimeoutHandler = timeoutHandler || defaultTimeoutHandler;
+  const actualTimeoutHandler: TimeoutHandler<unknown> = timeoutHandler || defaultTimeoutHandler;
   const timeout = timeForInactivity || defaultTimeForInactivity;
 
   /**
@@ -112,11 +108,16 @@ const UserInactivity: React.FC<UserInactivityProps> = ({
   /**
    * The timeout is reset when either `date` or `timeout` change.
    */
-  const cancelTimer = useTimeout(() => {
-    setActive(false);
-    onAction(false);
-    // @ts-ignore
-  }, timeout, actualTimeoutHandler, [date, timeout]);
+  const cancelTimer = useTimeout(
+    () => {
+      setActive(false);
+      onAction(false);
+      // @ts-ignore
+    },
+    timeout,
+    actualTimeoutHandler,
+    [date, timeout],
+  );
 
   const isFirstRender = useRef(true);
 
@@ -143,8 +144,14 @@ const UserInactivity: React.FC<UserInactivityProps> = ({
       return;
     }
 
-    const hideEvent = Keyboard.addListener('keyboardDidHide', resetTimerDueToActivity);
-    const showEvent = Keyboard.addListener('keyboardDidShow', resetTimerDueToActivity);
+    const hideEvent = Keyboard.addListener(
+      'keyboardDidHide',
+      resetTimerDueToActivity,
+    );
+    const showEvent = Keyboard.addListener(
+      'keyboardDidShow',
+      resetTimerDueToActivity,
+    );
 
     // release event listeners on destruction
     return () => {
@@ -190,11 +197,7 @@ const UserInactivity: React.FC<UserInactivityProps> = ({
   );
 
   return (
-    <View
-      style={actualStyle}
-      collapsable={false}
-      {...panResponder.panHandlers}
-    >
+    <View style={actualStyle} collapsable={false} {...panResponder.panHandlers}>
       {children}
     </View>
   );
